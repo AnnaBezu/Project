@@ -36,6 +36,7 @@ def SP500():
     return tick_to_download
 
 def get_data():
+    tick_to_download = SP500()
     #set the beginning of time series to 1st of Jan 2010
     BEGINNING = "2010-01-01"
     #Set today's date
@@ -43,4 +44,6 @@ def get_data():
     #DOWNLOADING DATA
     data = yf.download(tick_to_download,start=BEGINNING,end=TODAY)
     data = data.reset_index()
-    return data
+    df = pd.DataFrame(data=data)
+    df
+    return df
