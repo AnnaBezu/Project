@@ -3,7 +3,7 @@ import re
 import json
 from bs4 import BeautifulSoup as bs
 
-def get_data(stock_name):
+def get_data_macro(stock_name):
     url = f'https://www.macrotrends.net/stocks/charts/{stock_name}/3m/financial-ratios?freq=Q'
     response = requests.get(url)
     p = re.compile(r' var originalData = (.*?);\r\n\r\n\r',re.DOTALL)
