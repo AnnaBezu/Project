@@ -1,0 +1,67 @@
+import streamlit
+import yfinance
+import plotly
+import ipywidgets as widgets
+import streamlit as st
+from datetime import date
+import yfinance as yf
+from plotly import graph_objs as go
+import SP500_data_downloader as SP
+from SP500_data_downloader import *
+from IPython.display import clear_output
+from pandas_datareader import DataReader
+
+st.markdown("<h1 style='text-align: center; color: #6aa84f; '> STOCK PREDICTION </h1>", unsafe_allow_html=True)
+
+st.markdown("""
+Dear user,
+data are uploading and it may take a while... This process may take approximately 15 minutes. Thanks to data upload at the beginning, you can further change your analysis without any further waiting.
+""")
+
+st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Selection of data for analysis </h6>", unsafe_allow_html=True)
+
+       
+tickers=SP500()
+x=get_data_try() #CHANGE THIS FUNCTION TO get_data_yahoo() TO GET ALL DATA!
+
+#data=get_data() #NOT USE - TAKES A LONG LONG LONG TIME
+
+BEGINNING = "2015-01-01"
+TODAY = date.today().strftime("%Y-%m-%d")
+
+selected_tickers = st.multiselect('Companies', tickers)  #selecting tickers for analysis
+
+## Date
+date1 = st.select_slider(
+     'Select a final year of your analysis (format: Year-Month-Day)',
+     options=['2016-12-31', '2017-12-31', '2018-12-31', '2019-12-31', '2020-12-31', '2021-12-31'])
+st.write('Final date:', date1)
+
+#Delete?
+col1_date_initial, col2_date_final = st.columns(2)
+col1_date_initial.write(' ## **Initial Date**')
+date_initial = col1_date_initial.date_input('Select the first day for analysis')
+col2_date_final.write('## **Final Date**')
+date_final = col2_date_final.date_input('Select the final day of analysis')
+
+#@st.cache(allow_output_mutation=True)
+#def get_stock_data(ticker):
+#    BEGINNING = "2019-01-01"
+#    TODAY = date.today().strftime("%Y-%m-%d")
+#    time.sleep(2)
+#    data = yf.download(ticker,start=BEGINNING,end=TODAY)
+#    return data
+
+#tickerData = yf.Ticker('MSFT')
+#tickerDf = tickerData.history(period='1d', start='2010-1-1', end='2022-1-25')
+
+ 
+st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Please, press the button to see if the analysis will continue to work correctly with the selected data.  </h6>", unsafe_allow_html=True)
+
+if st.button('Some button'):
+    if len(selected_tickers) >4:
+        st.write('You can select maximum 4 tickers for analysis. Please, reselect your tickers otherwise, the analysis may not be correct and some error may occur.')
+    else:
+        st.write('With selected data, the analysis will work properly :-)')
+
+
