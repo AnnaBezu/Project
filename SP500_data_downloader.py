@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 import streamlit
 import matplotlib.pyplot as plt
 import yfinance as yf
+import lxml
+from pandas_datareader import DataReader
 
 #Get stock names S&P 500 from Wikipedia
 def SP500():
@@ -44,6 +46,21 @@ def get_data():
     #DOWNLOADING DATA
     data = yf.download(tick_to_download,start=BEGINNING,end=TODAY)
     data = data.reset_index()
-    df = pd.DataFrame(data=data)
-    df
+    df2 = pd.DataFrame(data=data)
+    return df2
+
+#get data for all tickers
+def get_data_yahoo():
+    ticker_symbol=SP500()
+    BEGINNING = "2015-01-01"
+    TODAY = date.today().strftime("%Y-%m-%d")
+    df = DataReader(ticker_symbol, 'yahoo', BEGINNING, TODAY)
+    return df
+
+#JUST FOR BUILDING APP:
+def get_data_try():
+    ticker_symbol="AAPL"
+    BEGINNING = "2015-01-01"
+    TODAY = date.today().strftime("%Y-%m-%d")
+    df = DataReader(ticker_symbol, 'yahoo', BEGINNING, TODAY)
     return df
