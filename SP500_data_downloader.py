@@ -54,13 +54,22 @@ def get_data_yahoo():
     ticker_symbol=SP500()
     BEGINNING = "2015-01-01"
     TODAY = date.today().strftime("%Y-%m-%d")
-    df = DataReader(ticker_symbol, 'yahoo', BEGINNING, TODAY)
+    df1 = DataReader(ticker_symbol, 'yahoo', BEGINNING, TODAY)   
+    df2=df1.reset_index()
+    df2['Date']=df2['Date'].dt.date
+    df3=df2.set_index('Date')
+    df = pd.DataFrame(data=df3)
     return df
 
 #JUST FOR BUILDING APP:
 def get_data_try():
-    ticker_symbol="AAPL"
+    ticker_symbol=['AAPL','MSFT','GE','IBM','AA','DAL','UAL', 'PEP', 'KO']
     BEGINNING = "2015-01-01"
     TODAY = date.today().strftime("%Y-%m-%d")
-    df = DataReader(ticker_symbol, 'yahoo', BEGINNING, TODAY)
+    df1 = DataReader(ticker_symbol, 'yahoo', BEGINNING, TODAY)   
+    df2=df1.reset_index()
+    df2['Date']=df2['Date'].dt.date
+    df3=df2.set_index('Date')
+    df = pd.DataFrame(data=df3)
     return df
+
