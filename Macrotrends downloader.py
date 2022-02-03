@@ -1,6 +1,7 @@
 import requests
 import re
 import json
+import pandas as pd
 from bs4 import BeautifulSoup as bs
 
 def get_data_macro(stock_name):
@@ -12,7 +13,8 @@ def get_data_macro(stock_name):
     headers.remove('popup_icon')
     ratios = []
     for row in data:
-        soup = bs(row['field_name'])
+        soup = bs(row['field_name'],'lxml')
+        #soup = bs(row['field_name'])
         field_name = soup.select_one('a, span').text
         fields = list(row.values())[2:]
         fields.insert(0, field_name)
