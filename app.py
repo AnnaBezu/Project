@@ -9,7 +9,6 @@ import SP500_data_downloader as SP
 from SP500_data_downloader import *
 import Macrotrends_downloader as MT
 from Macrotrends_downloader import *
-
 from IPython.display import clear_output
 from pandas_datareader import DataReader
 
@@ -141,49 +140,80 @@ def macro_df():
     
 #Ratios for selected tickers
 MT_data=macro_df()
-MT_data_show = MT_data.astype(str)
+MT_data=pd.DataFrame(MT_data)
+MT_data_show = MT_data
 list_of_ratios_with_T=MT_data_show.columns.to_list()
 list_of_ratios=list_of_ratios_with_T[1:]
 #list_of_ratios=MT_data_show["Ratio"].values.tolist()
+if st.button('Click for ratios'):
+    what_ratio = st.radio(
+         "For what tickers do you want to see ratio?",
+         ('For all selected tickers', 'For one from selected tickers', 'For one from all tickers from S&P 500'))
 
-what_ratio = st.radio(
-     "For what tickers do you want to see ratio?",
-     ('For all selected tickers', 'For one from selected tickers', 'For one from all tickers from S&P 500'))
+    if what_ratio == 'For all selected tickers':
+        st.write('Here you can see ratios for all selected tickers')
+        st.write(MT_data_show)
+        ratio_selected=st.selectbox(
+        'What ratio are you interested to display?',
+        (list_of_ratios))
+        with st.expander("See definitions of ratios"):
+            with open('Ratios_def.txt') as f:
+                for line in f:
+                    st.write(line)
+        st.subheader(f'Data for ratio: {ratio_selected}')
+        df_ratio_selected=MT_data_show[ratio_selected]
+        col_rat, col_rat_t = st.columns([3, 2])
+        col_rat.subheader("Graph")
+        col_rat.line_chart(df_ratio_selected)
+        col_rat_t.subheader("Table")
+        col_rat_t.write(df_ratio_selected)
 
-if what_ratio == 'For all selected tickers':
-    st.write('Here you can see ratios for all selected tickers')
-    st.dataframe(MT_data_show)
-    ratio_selected=st.selectbox(
-    'What ratio are you interested to display?',
-    (list_of_ratios))
-    with st.expander("See definitions of ratios"):
-        st.write("""
-        WRITE EXPLANATION OF RATIOS
-     """)
-    df_ratio_selected=MT_data_show[ratio_selected]
-    col_rat, col_rat_t = st.columns([3, 2])
-    col_rat.subheader("Graph")
-    col_rat.line_chart(df_ratio_selected)
-    col_rat.subheader("Table")
-    col_rat_t.write(df_ratio_selected)
+    elif what_ratio=='For one from selected tickers':
+        st.write('Please, select one ticker from previously selected tickers.')
+        option = st.selectbox(
+         'Select to show ratios only for',
+            (selected_tickers))
+        st.write('You selected:', option)
+        rat1=MT_data_show[MT_data_show["TICKER"] ==option]
+        rat2=rat1.astype(str)
+        st.write(rat2)
+        ratio_selected2=st.selectbox(
+        'What ratio are you interested to display?',
+        (list_of_ratios))
+        with st.expander("See definitions of ratios"):
+            with open('Ratios_def.txt') as f:
+                for line in f:
+                    st.write(line)
+        st.subheader(f'Data for ratio: {ratio_selected2}')
+        df_rat_sel2=rat2[ratio_selected2]
+        col_rat2, col_rat2_t = st.columns([4, 2])
+        col_rat2.subheader("Graph")
+        col_rat2.line_chart(df_rat_sel2)
+        col_rat2_t.subheader("Table")
+        col_rat2_t.write(df_rat_sel2)
 
-elif what_ratio=='For one from selected tickers':
-    st.write('Please, select one ticker from previously selected tickers.')
-    option = st.selectbox(
-     'Select to show ratios only for',
-        (selected_tickers))
-    st.write('You selected:', option)
-    rat1=get_data_macro(option)
-    rat2=rat1.astype(str)
-    st.write(rat2)
-else:
-    st.write('Please, select one ticker from S&P Tickers.')
-    option2 = st.selectbox(
-        'Select to show ratios only for',
-        (tickers))
-    st.write('You selected:', option2)
-    rat3=get_data_macro(option2)
-    rat4=rat3.astype(str)
-    st.write(rat4)
 
- 
+    else:
+        st.write('Please, select one ticker from S&P Tickers.')
+        option2 = st.selectbox(
+            'Select to show ratios only for',
+            (tickers))
+        st.write('You selected:', option2)
+        rat3=get_data_macro(option2)
+        rat3=rat3.set_index('field_name').T
+        rat4=pd.DataFrame(rat3)
+        st.write(rat4)
+        ratio_selected3=st.selectbox(
+        'What ratio are you interested to display?',
+        (list_of_ratios))
+        with st.expander("See definitions of ratios"):
+            with open('Ratios_def.txt') as f:
+                for line in f:
+                    st.write(line)
+        st.subheader(f'Data for ratio: {ratio_selected3}')
+        df_rat_sel3=rat4[ratio_selected3]
+        col_rat3, col_rat3_t = st.columns([4, 2])
+        col_rat3.subheader("Graph")
+        col_rat3.line_chart(df_rat_sel3)
+        col_rat3_t.subheader("Table")
+        col_rat3_t.write(df_rat_sel3)
