@@ -1,0 +1,40 @@
+CURRENT RATIO can be defined as a liquidity ratio that measures a company's ability to pay short-term obligations.
+
+LONG-TERM DEBT/CAPITAL can be defined as a measurement of a company's financial leverage, calculated as the company's long-term debt divided by its total capital.
+
+DEBT/EQUITY RATIO can be defined as a measure of a company's financial leverage calculated by dividing its long-term debt by stockholders' equity.
+
+GROSS MARGIN is the amount of money a company retains after incurring the direct costs associated with producing the goods it sells and the services it provides
+
+OPERATING MARGIN measures how much profit a company makes on a dollar of sales after paying for variable costs of production
+
+EBIT MARGIN is a financial ratio that measures the profitability of a company calculated without taking into account the effect of interest and taxes.
+
+EBITDA MARGIN is a measure of a company's operating profit as a percentage of its revenue.
+
+PRE-TAX PROFIT MARGIN can be defined as earnings before taxes as a portion of total revenue.
+Net profit margin can be defined as net Income as a portion of total sales revenue.
+
+ASSET TURNOVER can be defined as the amount of sales or revenues generated per dollar of assets. The asset turnover ratio is an indicator of the efficiency with which a company is deploying its assets.
+
+INVENTORY TURNOVER RATIO can be defined as a ratio showing how many times a company's inventory is sold and replaced over a period.
+
+RECEIVABLE TURNOVER can be defined as an accounting measure used to quantify a firm's effectiveness in extending credit as well as collecting debts.
+
+DAYS SALES IN RECEIVABLES can be defined as the average number of days it takes to collect outstanding receiveable amounts from customers.
+
+RETURN ON EQUITY (ROE) can be defined as the amount of net income returned as a percentage of shareholders equity. Return on equity measures a corporation's profitability by revealing how much profit a company generates with the money shareholders have invested.
+
+RETURN ON TANGIBLE EQUITY can be defined as the amount of net income returned as a percentage of shareholders equity, after subtracting intangible assets, goodwill and preferred equity.
+
+RETURN ON ASSETS (ROA) can be defined as an indicator of how profitable a company is relative to its total assets. Calculated by dividing a company's operating earnings by its total assets.
+
+RETURN ON INVESTMENT (ROI) is calculated by dividing the profit earned on an investment by the cost of that investment
+
+BOOK VALUE PER SHARE can be defined as the amount of equity available to shareholders expressed on a per common share basis.
+
+OPERATIN CASH FLOW per share can be defined as a measure of financial performance calculated as operating cash flow, expressed on a per share basis.
+
+FREE CASH FLOW per share can be defined as a measure of financial performance calculated as operating cash flow minus capital expenditures, expressed on a per share basis.
+
+Source: macrotrends.net, investopedia.com, businessnovice.net
