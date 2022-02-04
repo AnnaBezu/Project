@@ -37,6 +37,7 @@ def SP500():
     tick_to_download = tick.tolist()
     return tick_to_download
 
+#Get financial data using yfinance package
 def get_data():
     tick_to_download = SP500()
     #set the beginning of time series to 1st of Jan 2010
@@ -49,12 +50,12 @@ def get_data():
     df2 = pd.DataFrame(data=data)
     return df2
 
-#get data for all tickers
+#Get data using DataReader - FOR ALL TICKERS
 def get_data_yahoo():
     ticker_symbol=SP500()
     BEGINNING = "2015-01-01"
     TODAY = date.today().strftime("%Y-%m-%d")
-    df1 = DataReader(ticker_symbol, 'yahoo', BEGINNING, TODAY)   
+    df1 = DataReader(ticker_symbol, 'yahoo', BEGINNING, TODAY)
     df2=df1.reset_index()
     df2['Date']=df2['Date'].dt.date
     df3=df2.set_index('Date')
@@ -72,4 +73,3 @@ def get_data_try():
     df3=df2.set_index('Date')
     df = pd.DataFrame(data=df3)
     return df
-
