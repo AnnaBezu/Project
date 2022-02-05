@@ -23,13 +23,15 @@ data are uploading and it may take a while... This process may take approximatel
 st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Selection of data for analysis </h6>", unsafe_allow_html=True)
 
 tickers=SP500()
+data=get_data_try() #loading only 9 tickers
 
-@st.cache
-def load_data():
-    data = get_data_yahoo()
-    return data
 
-data=load_data()
+#@st.cache #LOADING ALL TICKERS
+#def load_data():
+#    data = get_data_yahoo()
+#    return data
+
+#data=load_data()
 
 BEGINNING = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
