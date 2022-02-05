@@ -11,6 +11,7 @@ import Macrotrends_downloader as MT
 from Macrotrends_downloader import *
 from IPython.display import clear_output
 from pandas_datareader import DataReader
+from streamlit.errors import StreamlitAPIException
 
 st.markdown("<h1 style='text-align: center; color: #6aa84f; '> STOCK PREDICTION </h1>", unsafe_allow_html=True)
 
@@ -22,12 +23,13 @@ data are uploading and it may take a while... This process may take approximatel
 st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Selection of data for analysis </h6>", unsafe_allow_html=True)
 
 tickers=SP500()
-data=get_data_try() #CHANGE THIS FUNCTION TO get_data_yahoo() TO GET ALL DATA!
-with st.spinner('Data loading'):
-    time.sleep(5)
-st.success('Data are loaded!')
 
-#data=get_data() #NOT USE - TAKES A LONG LONG LONG TIME
+@st.cache
+def load_data():
+    data = get_data_yahoo()
+    return data
+
+data=load_data()
 
 BEGINNING = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
@@ -141,21 +143,22 @@ def macro_df():
 #Ratios for selected tickers
 MT_data=macro_df()
 MT_data=pd.DataFrame(MT_data)
-MT_data_show = MT_data
+MT_data_show = MT_data.astype(str)
 list_of_ratios_with_T=MT_data_show.columns.to_list()
 list_of_ratios=list_of_ratios_with_T[1:]
 #list_of_ratios=MT_data_show["Ratio"].values.tolist()
-if st.button('Click for ratios'):
-    what_ratio = st.radio(
-         "For what tickers do you want to see ratio?",
-         ('For all selected tickers', 'For one from selected tickers', 'For one from all tickers from S&P 500'))
 
+st.subheader('Ratios from Macrotrends')
+try:
+    what_ratio = st.radio(
+        "For what tickers do you want to see ratio?",
+        ('For all selected tickers', 'For one from selected tickers', 'For one from all tickers from S&P 500'))
     if what_ratio == 'For all selected tickers':
         st.write('Here you can see ratios for all selected tickers')
         st.write(MT_data_show)
         ratio_selected=st.selectbox(
-        'What ratio are you interested to display?',
-        (list_of_ratios))
+            'What ratio are you interested to display?',
+            (list_of_ratios))
         with st.expander("See definitions of ratios"):
             with open('Ratios_def.txt') as f:
                 for line in f:
@@ -167,19 +170,18 @@ if st.button('Click for ratios'):
         col_rat.line_chart(df_ratio_selected)
         col_rat_t.subheader("Table")
         col_rat_t.write(df_ratio_selected)
-
     elif what_ratio=='For one from selected tickers':
         st.write('Please, select one ticker from previously selected tickers.')
         option = st.selectbox(
-         'Select to show ratios only for',
-            (selected_tickers))
+             'Select to show ratios only for',
+                (selected_tickers))
         st.write('You selected:', option)
         rat1=MT_data_show[MT_data_show["TICKER"] ==option]
         rat2=rat1.astype(str)
         st.write(rat2)
         ratio_selected2=st.selectbox(
         'What ratio are you interested to display?',
-        (list_of_ratios))
+         (list_of_ratios))
         with st.expander("See definitions of ratios"):
             with open('Ratios_def.txt') as f:
                 for line in f:
@@ -191,8 +193,6 @@ if st.button('Click for ratios'):
         col_rat2.line_chart(df_rat_sel2)
         col_rat2_t.subheader("Table")
         col_rat2_t.write(df_rat_sel2)
-
-
     else:
         st.write('Please, select one ticker from S&P Tickers.')
         option2 = st.selectbox(
@@ -202,10 +202,11 @@ if st.button('Click for ratios'):
         rat3=get_data_macro(option2)
         rat3=rat3.set_index('field_name').T
         rat4=pd.DataFrame(rat3)
-        st.write(rat4)
+        rat4=rat4.astype(str)
+        st.dataframe(rat4)
         ratio_selected3=st.selectbox(
-        'What ratio are you interested to display?',
-        (list_of_ratios))
+         'What ratio are you interested to display?',
+         (list_of_ratios))
         with st.expander("See definitions of ratios"):
             with open('Ratios_def.txt') as f:
                 for line in f:
@@ -217,3 +218,5 @@ if st.button('Click for ratios'):
         col_rat3.line_chart(df_rat_sel3)
         col_rat3_t.subheader("Table")
         col_rat3_t.write(df_rat_sel3)
+except StreamlitAPIException:
+    st.error('We are so sorry, you selected ticker, for which data are invalid. Please, select other ticker.')
