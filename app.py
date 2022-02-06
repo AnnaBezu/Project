@@ -12,12 +12,15 @@ from Macrotrends_downloader import *
 from IPython.display import clear_output
 from pandas_datareader import DataReader
 from streamlit.errors import StreamlitAPIException
+import predictions_STA_EMA as STA_EMA
+from predictions_STA_EMA import *
+
 
 st.markdown("<h1 style='text-align: center; color: #6aa84f; '> STOCK PREDICTION </h1>", unsafe_allow_html=True)
 
 st.markdown("""
 Dear user,
-data are uploading and it may take a while... This process may take approximately 15 minutes. Thanks to data upload at the beginning, you can further change your analysis without any further waiting.
+data are uploading and it may take a while... This process may take approximately 15 minutes. Thanks to data upload at the beginning, you can further change your analysis without any additional waiting.
 """)
 
 st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Selection of data for analysis </h6>", unsafe_allow_html=True)
@@ -39,6 +42,7 @@ def load_data():
 #    return data
 
 data=load_data()
+
 
 BEGINNING = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
@@ -99,7 +103,7 @@ if st.button('Click for data and graphs'):
         col_close.line_chart(data_close)
         with st.expander("See explanation"):
                  st.write("""
-         The chart and the table above show the data for close price for selected stocks. 
+         The chart and the table above show the data for close price for selected stocks. Closing price denotes the price at the end of the trading day at which security was transacted. As it is not influenced by stock splits or cash/stock dividens, it is a feature investors look at the most often.
      """)
 
         col_close_t.subheader("Close price for selected stocks")
@@ -112,7 +116,7 @@ if st.button('Click for data and graphs'):
         col_close.line_chart(data_close)
         with st.expander("See explanation"):
                  st.write("""
-         The chart and the table above show the data for open price for selected stocks. 
+         The chart and the table above show the data for open price for selected stocks. Opening price refers to the price at which each stock is traded immediately after the stock exchange opens to trading. However, it is not the same as the closing price from previous trading day.
      """)
 
         col_close_t.subheader("Open price for selected stocks")
@@ -125,7 +129,7 @@ if st.button('Click for data and graphs'):
         col_close.line_chart(data_close)
         with st.expander("See explanation"):
                  st.write("""
-         The chart and the table above show the data of volume for selected stocks. 
+         The chart and the table above show the data of volume for selected stocks. In general, trading volume measures how much certain financial asset is traded during specific period. In case of stocks, it means number of shares traded. Trading volumes are associated with market strength and thus, investors consider observing volume patterns very useful.
      """)
 
         col_close_t.subheader("Volume for selected stocks")
@@ -246,3 +250,29 @@ try:
         col_rat3_t.write(df_rat_sel3)
 except StreamlitAPIException:
     st.error('We are so sorry, you selected ticker, for which data are invalid. Please, select other ticker.')
+    
+st.subheader('Stock price and volume predictions')
+
+if st.button('Click for short term predictions'):
+    bb=pd.DataFrame(data)
+    #st.write(",".join((selected_tickers)))
+    st.write("In the tables below, you are given short-term (one trading day ahead) predictions on Open price, Close price and Volume of selected ticker(s).") 
+    st.write("The first table contains predictions obtained via Standard Averaging (STA). The key idea of this method is to use historical values within specific time window (in this prediction we use 100 days), average them and use the obtained value as prediction for the following day.")
+    st.write(pred_sta_app(selected_tickers, bb))
+    st.write(" ")
+    st.write(" ")
+    st.write("The second table presents predictions coming from exponential averaging following Exponential Moving Average (EMA) methodology.")
+    st.write(pred_ema_app(selected_tickers,bb))
+    st.write(" ")
+    st.write(" ")
+    #st.write(data_volume)
+    #st.write(" ")
+    #st.write(" ")
+    #st.write(pd.DataFrame(data.Volume[selected_tickers]["GE"],columns=selected_tickers))
+    #st.write(" ")
+    #st.write(" ")
+    #st.write(pd.DataFrame(data.Close))
+    #st.write(data)
+        
+    
+    

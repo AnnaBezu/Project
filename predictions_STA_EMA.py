@@ -58,7 +58,7 @@ def pred_sta(ticker_list):
     
     
 # define the function for STA predictions to be used in the web app
-def pred_sta_app(ticker_list):
+def pred_sta_app(ticker_list,aa):
     
     # specify the column names while initializing the table 
     myTable = PrettyTable(["Ticker", "Prediction method", "Open", "Close", "Volume"]) 
@@ -149,7 +149,7 @@ def pred_ema(ticker_list):
     
     
 # define the function for EMA predictions that will be used in the web app
-def pred_ema_app(ticker_list):
+def pred_ema_app(ticker_list, aa):
     # specify the column names while initializing the table 
     myTable = PrettyTable(["Ticker", "Prediction method", "Open", "Close", "Volume"]) 
 
