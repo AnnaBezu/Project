@@ -23,7 +23,14 @@ data are uploading and it may take a while... This process may take approximatel
 st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Selection of data for analysis </h6>", unsafe_allow_html=True)
 
 tickers=SP500()
-data=get_data_try() #loading only 9 tickers
+
+
+@st.cache #LOADING ONLY 9 TICKERS
+def load_data():
+    data = get_data_try()
+    return data
+
+#data=get_data_try() #loading only 9 tickers
 
 
 #@st.cache #LOADING ALL TICKERS
@@ -31,34 +38,39 @@ data=get_data_try() #loading only 9 tickers
 #    data = get_data_yahoo()
 #    return data
 
-#data=load_data()
+data=load_data()
 
 BEGINNING = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
 
-selected_tickers = st.multiselect('Companies', tickers)  #selecting tickers for analysis
-
-## Date slider
-date1 = st.select_slider(
+try:
+    selected_tickers = st.multiselect('Companies', tickers)  #selecting tickers for analysis
+    ## Date slider
+    date1 = st.select_slider(
      'Select a final year of your analysis (format: Year-Month-Day)',
      options=['2016-12-31', '2017-12-31', '2018-12-31', '2019-12-31', '2020-12-31', '2021-12-31'])
-st.write('Final date:', date1)
+    st.write('Final date:', date1)
+    #Date from calendar
+    col1_date_initial, col2_date_final = st.columns(2)
+    col1_date_initial.write(' ## **Initial Date**')
+    date_initial = col1_date_initial.date_input('Select the first day for analysis')
+    col2_date_final.write('## **Final Date**')
+    date_final = col2_date_final.date_input('Select the final day of analysis')
 
-#Date from calendar
-col1_date_initial, col2_date_final = st.columns(2)
-col1_date_initial.write(' ## **Initial Date**')
-date_initial = col1_date_initial.date_input('Select the first day for analysis')
-col2_date_final.write('## **Final Date**')
-date_final = col2_date_final.date_input('Select the final day of analysis')
+    data_volume=pd.DataFrame(data.Volume[selected_tickers],columns=selected_tickers)
+    data_volume.index = pd.to_datetime(data_volume.index)
 
-data_volume=pd.DataFrame(data.Volume[selected_tickers],columns=selected_tickers)
-data_volume.index = pd.to_datetime(data_volume.index)
+    data_close=pd.DataFrame(data.Close[selected_tickers],columns=selected_tickers)
+    data_close.index = pd.to_datetime(data_close.index)
 
-data_close=pd.DataFrame(data.Close[selected_tickers],columns=selected_tickers)
-data_close.index = pd.to_datetime(data_close.index)
+    data_open=pd.DataFrame(data.Open[selected_tickers],columns=selected_tickers)
+    data_open.index = pd.to_datetime(data_open.index)
+except KeyError:
+     st.error('We are so sorry, you selected ticker, for which data are invalid. Please, select other ticker.')
+    
 
-data_open=pd.DataFrame(data.Open[selected_tickers],columns=selected_tickers)
-data_open.index = pd.to_datetime(data_open.index)
+
+
 
 #data['Date'] = pd.to_datetime(data['Date'],format='%Y%m%d')
 #data['Date']=data['Date'].dt.date
@@ -131,16 +143,28 @@ if st.button('Click for data and graphs'):
 #        ratios.rename(columns={'field_name':'Ratio'}, inplace=True)
 #        return ratios
 
+#def macro_df():
+#    ratios=[]
+#    for ticker in selected_tickers:
+#        rat=get_data_macro(ticker)
+#        rat=rat.set_index('field_name').T
+##        ratios=pd.DataFrame(rat)
+#        ratios.insert(0,'TICKER','')
+#        ratios["TICKER"] = ticker
+ #       #ratios.rename(columns={'field_name':'Ratio'}, inplace=True)
+ #       return ratios
+
 def macro_df():
-    ratios=[]
+    ratios=pd.DataFrame()
     for ticker in selected_tickers:
         rat=get_data_macro(ticker)
         rat=rat.set_index('field_name').T
-        ratios=pd.DataFrame(rat)
-        ratios.insert(0,'TICKER','')
-        ratios["TICKER"] = ticker
+        ratios2=pd.DataFrame(rat)
+        ratios2.insert(0,'TICKER','')
+        ratios2["TICKER"] = ticker
+        ratios=ratios.append(ratios2)
         #ratios.rename(columns={'field_name':'Ratio'}, inplace=True)
-        return ratios
+    return(ratios) 
     
 #Ratios for selected tickers
 MT_data=macro_df()
