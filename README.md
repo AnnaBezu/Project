@@ -19,8 +19,12 @@ aa
 
 Assuming the viewer of this project is considering trading on stock market, the prediction models could be useful since they give its user an idea of how might the prices on the market develop and also help an individual to understand the market´s complexity. In our project, the prediction section will be divided into two parts depending on the prediction horizon - short-term predictions and long-term predictions. To model stocks´ short-term development (i.e. one-day ahead prediction), we will employ two techniques - standard averaging (STA) and exponential moving average (EMA). Predicting in long-term horizon will be covered by Long Short-Term Memory model. For more details. go to *predictions_sta_ema.ipyng* and *predictions_lstm.ipyng*, respectively.
 
+**Web app:**
 
-???????**NOTE:** You need to have the following packages installed for the code to run smoothly:
+The web app combines all the parts done separately in the ipynb files (web scrapping, data download, stock prediction) and displays it in user-friendly way. The user 
+
+
+**NOTE:** You need to have the following packages installed for the code to run smoothly:
 * pandas
 * pandas_datareader
 * numpy
