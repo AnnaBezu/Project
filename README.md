@@ -38,3 +38,11 @@ The last section of the web app covers stock´s value prediction....
 * keras
 * sklearn
 * matplotlib
+* streamlit
+* bs4
+* json
+* datetime
+* urllib.request
+* time
+* datetime
+
