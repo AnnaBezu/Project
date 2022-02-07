@@ -150,6 +150,10 @@ try:
     if what_ratio == 'For all selected tickers':
         st.write('Here you can see ratios for all selected tickers')
         st.write(MT_data_show)
+        with st.expander("See definitions of ratios"):
+            with open('Ratios_def.txt') as f:
+                for line in f:
+                    st.write(line)
     elif what_ratio=='For one from selected tickers':
         st.write('Please, select one ticker from previously selected tickers.')
         option = st.selectbox(
