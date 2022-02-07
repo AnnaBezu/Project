@@ -24,7 +24,6 @@ data are uploading and it may take a while... This process may take approximatel
 """)
 
 st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Selection of data for analysis </h6>", unsafe_allow_html=True)
-st.write("Firstly, select a maximum of 4 shares.")
 
 tickers=SP500()
 
@@ -47,6 +46,8 @@ data=load_data()
 
 BEGINNING = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
+
+st.write("Firstly, select a maximum of 4 shares.")
 
 try:
     selected_tickers = st.multiselect('Companies', tickers)  #selecting tickers for analysis
