@@ -24,22 +24,23 @@ data are uploading and it may take a while... This process may take approximatel
 """)
 
 st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Selection of data for analysis </h6>", unsafe_allow_html=True)
+st.write("Firstly, select a maximum of 4 shares.")
 
 tickers=SP500()
 
-
-@st.cache #LOADING ONLY 9 TICKERS
-def load_data():
-    data = get_data_try()
-    return data
-
-#data=get_data_try() #loading only 9 tickers
-
-
-#@st.cache #LOADING ALL TICKERS
+#LOADING ONLY 9 TICKERS
+#@st.cache #LOADING ONLY 9 TICKERS
 #def load_data():
-#    data = get_data_yahoo()
+#    data = get_data_try()
 #    return data
+
+
+
+#LOADING ALL TICKERS
+@st.cache #LOADING ALL TICKERS
+def load_data():
+    data = get_data_yahoo()
+    return data
 
 data=load_data()
 
@@ -49,18 +50,7 @@ TODAY = date.today().strftime("%Y-%m-%d")
 
 try:
     selected_tickers = st.multiselect('Companies', tickers)  #selecting tickers for analysis
-    ## Date slider
-    date1 = st.select_slider(
-     'Select a final year of your analysis (format: Year-Month-Day)',
-     options=['2016-12-31', '2017-12-31', '2018-12-31', '2019-12-31', '2020-12-31', '2021-12-31'])
-    st.write('Final date:', date1)
-    #Date from calendar
-    col1_date_initial, col2_date_final = st.columns(2)
-    col1_date_initial.write(' ## **Initial Date**')
-    date_initial = col1_date_initial.date_input('Select the first day for analysis')
-    col2_date_final.write('## **Final Date**')
-    date_final = col2_date_final.date_input('Select the final day of analysis')
-
+#Dataframes
     data_volume=pd.DataFrame(data.Volume[selected_tickers],columns=selected_tickers)
     data_volume.index = pd.to_datetime(data_volume.index)
 
@@ -75,13 +65,6 @@ except KeyError:
 
 
 
-
-#data['Date'] = pd.to_datetime(data['Date'],format='%Y%m%d')
-#data['Date']=data['Date'].dt.date
-#data['Date']=data['Date'].dt.date
-#data.index=data.index.to_pydatetime()
-#data_date=data.Date
-
 st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> Please, press the button to see if the analysis will continue to work correctly with the selected data.  </h6>", unsafe_allow_html=True)
 
 if st.button('Click for check'):
@@ -94,7 +77,10 @@ if st.button('Click for check'):
         st.write("Your selected tickers are:")
         st.write(', '.join(selected_tickers))
 
-    
+st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> If you obrain a positive message, that analysis will work properly, you can proceed the analysis.  </h6>", unsafe_allow_html=True)
+
+st.subheader('Financial data from Yahoo Finance')
+
 if st.button('Click for data and graphs'):
         #Data and graph for close prise
         col_close, col_close_t = st.columns([3, 2])
@@ -135,29 +121,6 @@ if st.button('Click for data and graphs'):
         col_close_t.subheader("Volume for selected stocks")
         col_close_t.write(data_close)
 
-#def macro_df():
-#    ratios=[]
-#    for ticker in selected_tickers:
-#        rat=get_data_macro(ticker)
-#        ratios=pd.DataFrame(rat)
-#        ratios=ratios.transpose() #IS IT RIGHT?
-#        ratios.insert(1,'TICKER','')
-#        ratios["TICKER"] = ticker
-#        ratios[0,2]=''
-#        ratios.rename(columns={'field_name':'Ratio'}, inplace=True)
-#        return ratios
-
-#def macro_df():
-#    ratios=[]
-#    for ticker in selected_tickers:
-#        rat=get_data_macro(ticker)
-#        rat=rat.set_index('field_name').T
-##        ratios=pd.DataFrame(rat)
-#        ratios.insert(0,'TICKER','')
-#        ratios["TICKER"] = ticker
- #       #ratios.rename(columns={'field_name':'Ratio'}, inplace=True)
- #       return ratios
-
 def macro_df():
     ratios=pd.DataFrame()
     for ticker in selected_tickers:
@@ -186,20 +149,6 @@ try:
     if what_ratio == 'For all selected tickers':
         st.write('Here you can see ratios for all selected tickers')
         st.write(MT_data_show)
-        ratio_selected=st.selectbox(
-            'What ratio are you interested to display?',
-            (list_of_ratios))
-        with st.expander("See definitions of ratios"):
-            with open('Ratios_def.txt') as f:
-                for line in f:
-                    st.write(line)
-        st.subheader(f'Data for ratio: {ratio_selected}')
-        df_ratio_selected=MT_data_show[ratio_selected]
-        col_rat, col_rat_t = st.columns([3, 2])
-        col_rat.subheader("Graph")
-        col_rat.line_chart(df_ratio_selected)
-        col_rat_t.subheader("Table")
-        col_rat_t.write(df_ratio_selected)
     elif what_ratio=='For one from selected tickers':
         st.write('Please, select one ticker from previously selected tickers.')
         option = st.selectbox(
@@ -273,6 +222,20 @@ if st.button('Click for short term predictions'):
     #st.write(" ")
     #st.write(pd.DataFrame(data.Close))
     #st.write(data)
-        
-    
-    
+
+st.subheader('Downloading data')
+
+st.markdown("<h6 style='text-align: cleft; color: #6aa84f; '> If you would like to create your own analysis, you can download data for S&P 500 market index from Yahoo Finance below.  </h6>", unsafe_allow_html=True)
+
+@st.cache
+def convert_df(df):
+    return df.to_csv().encode('utf-8')
+
+data_csv = convert_df(data)
+
+st.download_button(
+     label="Download financial data",
+     data=data_csv,
+     file_name='data.csv',
+     mime='text/csv',
+ )
